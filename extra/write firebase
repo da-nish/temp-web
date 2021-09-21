@@ -1,0 +1,19 @@
+function write() {
+firestore.addDoc(firestore.collection(db, "users"),{
+  first: "Ada",
+  last: "Lovelace",
+  born: 1815
+}).then(re=>console.log(re)).catch(err=> console.log(err));
+}
+write();
+
+
+
+
+    // console.log(req.file)
+    // firestore.addDoc(firestore.collection(db, "services"),{
+    //     title: req.body.title,
+    //     desc: req.body.desc,
+    //     img: '',
+    //     form: form
+    //   });

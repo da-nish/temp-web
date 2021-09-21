@@ -1,0 +1,47 @@
+<%- include('./includes/head.ejs') %>
+    <title><%= pageTitle %> </title>
+</head>
+<body>
+    <%- include('./includes/menu.ejs') %> 
+       
+    <div class="ui segment">
+        <h2 class="ui header"><%= pageTitle %></h2>
+
+        
+        <% if (formErr !="") { %>
+          <div class="ui warning message">
+            <div class="header"> <%= formErr%> </div>
+          </div>
+        <%}%>
+
+        <% if (formSucc !="") { %>
+          <div class="ui success message">
+            <div class="header"> <%= formSucc%> </div>
+          </div>
+        <%}%>
+
+
+        <form class="ui form" action="/signup" method="POST">
+          
+            <div class="field">
+              <label>Name</label>
+              <input type="text" name="name" value="<%= oldInput.name%>" placeholder="Name">
+            </div>
+            <div class="field">
+              <label>Email</label>
+              <input type="text" name="email" value="<%= oldInput.email%>" placeholder="Email">
+              <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            </div>
+            <div class="field">
+              <label>Password</label>
+              <input type="password" name="password" value="<%= oldInput.password%>" placeholder="Password">
+            </div>
+           
+            <button class="ui button" type="submit">Sign Up</button>
+          </form>
+        
+    </div>
+    </div>
+
+</body>  
+</html>

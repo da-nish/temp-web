@@ -1,0 +1,30 @@
+body{
+    /* background: rgb(40, 199, 178); */
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background: #eee;
+}
+
+.add-row{
+    padding: 6px;
+    margin-left: 10px;
+    width: 38px;
+    background-color: #ececec;
+    font-weight: 700;
+    border-radius: 2px;
+    color: #5d5858;
+    /* border: 2px solid #d4d4d4; */
+    text-align: center;
+}
+.remove-row{
+    padding: 4px 8px;
+    margin-left: 10px;
+    width: 38px;
+    background-color: #f7e5e5;
+    font-weight: 500;
+    border-radius: 2px;
+    color: #5d5858;
+    /* border: 2px solid #d4d4d4; */
+    text-align: center;
+}

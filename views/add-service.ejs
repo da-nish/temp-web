@@ -1,0 +1,120 @@
+<%- include('./includes/head.ejs') %>
+    <title><%= pageTitle %> </title>
+</head>
+<body>
+    <%- include('./includes/menu.ejs') %> 
+       
+    <div class="ui segment">
+        <h2 class="ui header"><%= pageTitle %></h2>
+
+    <form class="ui form" id="form" action="/add-service" method="POST"  enctype="multipart/form-data">
+        <input type="text" name="data" id="obj" value="" hidden>
+          
+        <div class="field">
+          <label>Title</label>
+          <input type="text" name="title" id="title" value="" placeholder="Title">
+        </div>
+        <div class="field">
+          <label>Description</label>
+          <input type="text" name="desc" id="desc" value="" placeholder="Description">
+        </div>
+        <div class="field">
+          <label>Image</label>
+          <!-- <input type="text" name="img" id="img" value="" placeholder="Image"> -->
+          <input type="file" accept="image/*" name="image" id="image" >
+        </div>
+        <div class="field">
+          <label>Form</label>
+          <table id="form1">
+              <tbody id="formbody">
+              </tbody>
+          </table>
+          <p class="add-row" onclick="addRow();">+</p>
+        </div>
+       
+      </form>
+      <br>
+      <div class="ui button" onclick="send()">Sign Up</div>
+    </div>
+
+    <script>
+        let count = 0;
+        const formfield = [];
+
+        function addRow(){
+            count++;
+            const newRow = `<tr id="row${count}">
+                        <td>
+                            <div class="">
+                                <input type="checkbox" name="row${count}_required" id="row${count}_required" ttabindex="0" class="hidden" style="vertical-align: middle;">
+                                <label>Required </label>
+                            </div>
+                        </td>
+                        <td><input type="text" name="row${count}_title" id="row${count}_title" value="" placeholder="Title"></td>
+                        <td><input type="text" name="row${count}_error" id="row${count}_error" value="" placeholder="Error Msg"></td>
+                        <td>
+                                <!-- <input type="hidden" name="gender"> -->
+                                <select name="row${count}_field" id="row${count}_field" >
+                                    <option value="Text">Text</option>
+                                    <option value="TextArea">TextArea</option>
+                                    <option value="Number">Number</option>
+                                    <option value="CheckBox">CheckBox</option>
+                                    <option value="DatePicker">DatePicker</option>
+                                </select>
+                        </td>
+                        <td>
+                            <span class="remove-row" onclick="removeField('row${count}')"> Remove </span>
+                        </td>
+        
+                    </tr>
+                `;
+            formfield.push('row'+count);
+            document.getElementById('formbody').insertAdjacentHTML('beforeend', newRow);
+        }
+        function test(){
+            var formData = new FormData($('#form')[0]);
+
+            formData.append("user", "Dummy");
+            formData.append("pass", 123456);
+            formData.append("image", $('input[type=file]')[0].files[0]);
+
+            $.ajax({
+                type: "POST",
+                url: "/add-service",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(msg) {
+                    console.log('ajax success');
+                },
+                error: function() {
+                    console.log('ajax error');
+                }
+            });
+        }
+        
+        function removeField(id){
+            for( var i = 0; i < formfield.length; i++){ 
+                if (formfield[i] === id) formfield.splice(i, 1); 
+            }
+            document.getElementById(id).remove();
+        }
+        function send(){
+            var obj = []
+            for(let i=0; i<formfield.length; i++){
+                obj.push({
+                    id: formfield[i],
+                    required: document.querySelector('#'+formfield[i]+'_required').checked,
+                    title: document.getElementById(formfield[i]+'_title').value,
+                    error: document.getElementById(formfield[i]+'_error').value,
+                    field: document.getElementById(formfield[i]+'_field').value,
+                })
+            }
+            
+            $('#obj').val(JSON.stringify(obj));
+            $('form').submit();
+        }
+    </script>
+</body>  
+</html>
+
