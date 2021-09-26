@@ -3,17 +3,14 @@ const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
 const { body, validationResult } = require('express-validator');
 const {firebase, db, storage} = require('../util/firebase');
-const firestore = require('firebase/firestore/lite');
-const bucket = require('firebase/storage')
-const upload = require('../util/fileupload').upload;
-
+const uploader = require('../util/uploader');//image upload
 var fs = require('fs');
+// const firestore = require('firebase/storage');
 
+const firestore = require('firebase/firestore/lite');
 
 //HOME
 exports.home = (req, res, next) =>{
-    
-
     res.render('home', {pageTitle:'Home',  path:'/'})
 }
 
@@ -22,25 +19,36 @@ exports.addService = (req, res, next) =>{
     res.render('add-service', {pageTitle:'Add Service', path:'/add-service'})
 }
 
-
 //Post - Add service Request
-exports.service = (req, res, next) =>{
+exports.service = async (req, res, next) =>{
+
     var image = req.file;
+    var filename;
+    if(image) {
+        console.log(image);
+        console.log(image.path);
+        const uploadResult = await uploader.image(image, 'services/');
+        if(!uploadResult){
+            return res.render('result', {pageTitle:'Fail',  path:'/'});
+        }
+        filename = req.file.filename;
+
+    }else{
+        console.log('no imgae');
+        filename = '';
+    }
     
-    // const storageRef = bucket.ref(storage, 't/name.jpg');
-    // const file = new Uint8Array().subarray(0, 4);
+    const form = JSON.parse(req.body.data);
+    console.log(filename);
+    console.log(form);
+    firestore.addDoc(firestore.collection(db, "services"),{
+        title: req.body.title,
+        desc: req.body.desc,
+        img: filename,
+        form: form
+      });
 
-    // bucket.uploadBytes(storageRef, image).then((snapshot) => {
-    //     console.log('Uploaded file!');
-    // });
-
-    console.log(image)
-    const data = req.body;
-    // const form = JSON.parse(req.body.data);
-    // console.log(form);
-
-    console.log();
-    res.render('home', {pageTitle:'Home',  path:'/'})
+    res.render('result', {pageTitle:'Success',  path:'/'})
 }
 
 // Add Provider

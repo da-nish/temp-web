@@ -2,7 +2,7 @@ const express = require('express')
 const userContoller = require('../controller/controller1')
 const route = express.Router();
 const { body, validationResult } = require('express-validator');
-const upload = require('../util/fileupload').upload;
+const upload = require('../util/multer').upload;
 
 route.get('/', userContoller.home)
 
