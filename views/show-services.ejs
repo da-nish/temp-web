@@ -1,0 +1,26 @@
+<%- include('./includes/head.ejs') %>
+<title><%= pageTitle %> </title>
+</head>
+<body>
+<%- include('./includes/menu.ejs') %> 
+   
+<div class="ui segment">
+    <h2 class="ui header"><%= pageTitle %></h2>
+    <hr>
+    
+    <% for(var i=0; i<data.length; i++) {%>
+        <div class="ui icon message">
+            <i class="inbox icon"></i>
+            <div class="content">
+              <div class="header">
+                <%= data[i].title %>
+              </div>
+              <p>Get the best news in your e-mail every day.</p>
+            </div>
+          </div>
+    <% } %>
+    
+</div>
+
+</body>  
+</html>

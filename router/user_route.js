@@ -8,8 +8,10 @@ route.get('/', userContoller.home)
 
 route.get('/add-service', userContoller.addService)
 route.post('/add-service', upload.single('image'), userContoller.service)
+route.get('/show-services', userContoller.showServices)
 
 route.get('/add-provider', userContoller.addProvider)
+route.get('/show-providers', userContoller.showProviders)
 route.get('/profile', userContoller.profile) 
 
 // route.get('/reset/:token/:email', userContoller.getReset)//from link 

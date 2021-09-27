@@ -8,10 +8,52 @@ var fs = require('fs');
 // const firestore = require('firebase/storage');
 
 const firestore = require('firebase/firestore/lite');
+const firebase_read = require('../firebase/read');
+
 
 //HOME
 exports.home = (req, res, next) =>{
     res.render('home', {pageTitle:'Home',  path:'/'})
+}
+
+//Get - Show All Services
+exports.showServices = async (req, res, next) => {
+
+    // const testFolder = '../images/';
+
+    // //get list of filename in /images and compare with firestore image data
+    // fs.readdirSync(testFolder).forEach(file => {
+    //     console.log(file);
+    // });
+
+    const data = await firebase_read.getServices('services');
+    res.render('show-services', {pageTitle:'All Services', data:data, path:'/show-services'})
+}
+
+
+//Get - Show All Providers
+exports.showProviders = async (req, res, next) => {
+
+    // const testFolder = '../images/';
+
+    // //get list of filename in /images and compare with firestore image data
+    // fs.readdirSync(testFolder).forEach(file => {
+    //     console.log(file);
+    // });
+    const providerInfo = await firebase_read.getProvidersInfo('provider-info');
+    const providers = await firebase_read.getProviders('providers');
+
+    for(var j=0; j<providerInfo.length; j++){
+        const services = []
+        for(var i=0; i<providers.length; i++){
+            if(providers[i].providerId==providerInfo[j].providerId){
+                services.push(providers[i]);
+            }
+        }
+        providerInfo[j]['services'] = services;
+    }
+    console.log(providerInfo[0].services)
+    res.render('show-providers', {pageTitle:'All Providers', data:providerInfo, path:'/show-providers'})
 }
 
 //Get - Add Service
