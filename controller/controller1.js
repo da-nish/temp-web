@@ -1,6 +1,7 @@
 
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
+var uuid = require('uuid');
 const { body, validationResult } = require('express-validator');
 const {firebase, db, storage} = require('../util/firebase');
 const uploader = require('../util/uploader');//image upload
@@ -13,6 +14,7 @@ const firebase_read = require('../firebase/read');
 
 //HOME
 exports.home = (req, res, next) =>{
+    console.log(uuid.v1());
     res.render('home', {pageTitle:'Home',  path:'/'})
 }
 
@@ -67,8 +69,6 @@ exports.service = async (req, res, next) =>{
     var image = req.file;
     var filename;
     if(image) {
-        console.log(image);
-        console.log(image.path);
         const uploadResult = await uploader.image(image, 'services/');
         if(!uploadResult){
             return res.render('result', {pageTitle:'Fail',  path:'/'});
@@ -81,13 +81,12 @@ exports.service = async (req, res, next) =>{
     }
     
     const form = JSON.parse(req.body.data);
-    console.log(filename);
-    console.log(form);
     firestore.addDoc(firestore.collection(db, "services"),{
         title: req.body.title,
         desc: req.body.desc,
         img: filename,
-        form: form
+        form: form,
+        serviceId: Date.now().toString()
       });
 
     res.render('result', {pageTitle:'Success',  path:'/'})
@@ -96,6 +95,32 @@ exports.service = async (req, res, next) =>{
 // Add Provider
 exports.addProvider = async (req, res, next) =>{
     res.render('add-provider', {pageTitle:'Add Provider', path:'/add-provider'})
+}
+
+exports.providerProfile = async (req, res, next) =>{
+    var image = req.file;
+    var filename;
+    if(image) {
+        const uploadResult = await uploader.image(image, 'providers/');
+        if(!uploadResult){
+            return res.render('result', {pageTitle:'Fail',  path:'/'});
+        }
+        filename = req.file.filename;
+
+    }else{
+        console.log('no imgae');
+        filename = '';
+    }
+    
+    firestore.addDoc(firestore.collection(db, "providers"),{
+        name: req.body.name,
+        desc: req.body.desc,
+        address: req.body.address,
+        img: filename,
+        providerId: Date.now().toString()
+      });
+
+    return res.render('result', {pageTitle:'Success',  path:'/'})
 }
 
 

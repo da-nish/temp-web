@@ -11,6 +11,7 @@ route.post('/add-service', upload.single('image'), userContoller.service)
 route.get('/show-services', userContoller.showServices)
 
 route.get('/add-provider', userContoller.addProvider)
+route.post('/add-provider', upload.single('image'), userContoller.providerProfile)
 route.get('/show-providers', userContoller.showProviders)
 route.get('/profile', userContoller.profile) 
 
