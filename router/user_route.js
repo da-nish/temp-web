@@ -5,6 +5,7 @@ const { body, validationResult } = require('express-validator');
 const upload = require('../util/multer').upload;
 
 route.get('/', userContoller.home)
+route.post('/load-data', userContoller.loadData)
 
 route.get('/add-service', userContoller.addService)
 route.post('/add-service', upload.single('image'), userContoller.service)

@@ -1,7 +1,6 @@
 
 const bcrypt = require('bcryptjs')
 const crypto = require('crypto')
-var uuid = require('uuid');
 const { body, validationResult } = require('express-validator');
 const {firebase, db, storage} = require('../util/firebase');
 const uploader = require('../util/uploader');//image upload
@@ -14,8 +13,18 @@ const firebase_read = require('../firebase/read');
 
 //HOME
 exports.home = (req, res, next) =>{
-    console.log(uuid.v1());
-    res.render('home', {pageTitle:'Home',  path:'/'})
+
+    res.render('home', {pageTitle:'Home', data:null, path:'/'})
+}
+
+exports.loadData = async (req, res, next) =>{
+    const providerInfo = await firebase_read.getProvidersInfo('provider-info');
+    const providers = await firebase_read.getProviders('providers');
+    const services = await firebase_read.getServices('services');
+
+    const data = {services: services, providerInfo:providerInfo, providers: providers};
+    return res.send(JSON.stringify(data));
+    
 }
 
 //Get - Show All Services
@@ -42,20 +51,20 @@ exports.showProviders = async (req, res, next) => {
     // fs.readdirSync(testFolder).forEach(file => {
     //     console.log(file);
     // });
-    const providerInfo = await firebase_read.getProvidersInfo('provider-info');
-    const providers = await firebase_read.getProviders('providers');
+    // const providerInfo = await firebase_read.getProvidersInfo('provider-info');
+    // const providers = await firebase_read.getProviders('providers');
 
-    for(var j=0; j<providerInfo.length; j++){
-        const services = []
-        for(var i=0; i<providers.length; i++){
-            if(providers[i].providerId==providerInfo[j].providerId){
-                services.push(providers[i]);
-            }
-        }
-        providerInfo[j]['services'] = services;
-    }
-    console.log(providerInfo[0].services)
-    res.render('show-providers', {pageTitle:'All Providers', data:providerInfo, path:'/show-providers'})
+    // for(var j=0; j<providerInfo.length; j++){
+    //     const services = []
+    //     for(var i=0; i<providers.length; i++){
+    //         if(providers[i].providerId==providerInfo[j].providerId){
+    //             services.push(providers[i]);
+    //         }
+    //     }
+    //     providerInfo[j]['services'] = services;
+    // }
+    // console.log(providerInfo[0].services)
+    res.render('show-providers', {pageTitle:'All Providers', path:'/show-providers'})
 }
 
 //Get - Add Service

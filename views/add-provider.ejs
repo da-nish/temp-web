@@ -51,13 +51,27 @@
           <label>Charges</label>
           <input type="text" name="charges" id="charges" value="" placeholder="Charges">
         </div>
-        <div class="field">
-          <label>ProviderID</label>
-          <input type="text" name="providerid" id="providerid" value="" placeholder="ProviderID">
-        </div>
+        
         <div class="field">
           <label>ServiceID</label>
-          <input type="text" name="serviceid" id="serviceid" value="" placeholder="ServiceID">
+            <select name="row${count}_field" id="row${count}_field" >
+              <option value="Text">Text</option>
+              <option value="TextArea">TextArea</option>
+              <option value="Number">Number</option>
+              <option value="CheckBox">CheckBox</option>
+              <option value="DatePicker">DatePicker</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>ProviderID</label>
+          <select name="row${count}_field" id="row${count}_field" >
+            <option value="Text">Text</option>
+            <option value="TextArea">TextArea</option>
+            <option value="Number">Number</option>
+            <option value="CheckBox">CheckBox</option>
+            <option value="DatePicker">DatePicker</option>
+          </select>
         </div>
         <div class="field">
           <label>Image</label>

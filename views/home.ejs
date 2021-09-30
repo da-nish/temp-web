@@ -6,8 +6,32 @@
        
     <div class="ui segment">
         <h2 class="ui header"><%= pageTitle %></h2>
-        
+            <button onclick="loadData()">Load data</button><br>
+            <span class="loading" ></span>
     </div>
+    
+    <script>
+        function loadData(){
+            $(".loading").text('Loading ...');
+            // return;
+            $.ajax({
+                type: "POST",
+                url: "/load-data",
+                data: {'epmt':'emppty'},
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log(data);
+                    localStorage.setItem('alldata',JSON.stringify(data))
+                    $(".loading").text('Done');
 
+                },
+                error: function() {
+                    $(".loading").text('Error occured');
+                    console.log('ajax error');
+                }
+            });
+        }
+    </script>
 </body>  
 </html>
