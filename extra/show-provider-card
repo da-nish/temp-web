@@ -14,3 +14,16 @@
     //         </div>
     //       </div>
     // <% } %> 
+
+
+
+    for( let j of providerInfo){
+        if(true){
+          console.log('yes');
+          `<p>yes</p>`
+        }
+        else{
+          console.log('no');
+          `<p>no</p>`
+        }
+      }

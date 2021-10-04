@@ -7,6 +7,8 @@
 <div class="ui segment">
     <h2 class="ui header"><%= pageTitle %></h2>
     <hr>
+    <div id="row">
+    </div>
 
 
 
@@ -15,17 +17,21 @@
       const providerInfo = data.providerInfo;
       const provider = data.providers;
 
-
+      console.log(providerInfo)
       console.log(provider)
 
+      for( let i of provider){
+        var row = `
+        <div class='ui icon message'>
+            <div class="content">
+              <div class="header">
+                ${i.title}
+              </div>
+            </div>
+        </div>`;
+        document.getElementById('row').insertAdjacentHTML('beforeend', row);
+      }
 
-    
-
-
-  // for( let i of data){
-  //   console.log(i.uname+" "+i.pass)
-  // }
-  
     </script>
     
 </div>

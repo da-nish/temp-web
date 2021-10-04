@@ -13,7 +13,6 @@ const firebase_read = require('../firebase/read');
 
 //HOME
 exports.home = (req, res, next) =>{
-
     res.render('home', {pageTitle:'Home', data:null, path:'/'})
 }
 
@@ -23,8 +22,7 @@ exports.loadData = async (req, res, next) =>{
     const services = await firebase_read.getServices('services');
 
     const data = {services: services, providerInfo:providerInfo, providers: providers};
-    return res.send(JSON.stringify(data));
-    
+    return res.send(JSON.stringify(data)); 
 }
 
 //Get - Show All Services
@@ -68,12 +66,12 @@ exports.showProviders = async (req, res, next) => {
 }
 
 //Get - Add Service
-exports.addService = (req, res, next) =>{
-    res.render('add-service', {pageTitle:'Add Service', path:'/add-service'})
-}
-
-//Post - Add service Request
-exports.service = async (req, res, next) =>{
+exports.addService = async (req, res, next) =>{
+    let requestMethod = req.method;
+    console.log(requestMethod);
+    if(requestMethod=='GET'){
+        return res.render('add-service', {pageTitle:'Add Service', path:'/add-service'})
+    }
 
     var image = req.file;
     var filename;
@@ -83,7 +81,6 @@ exports.service = async (req, res, next) =>{
             return res.render('result', {pageTitle:'Fail',  path:'/'});
         }
         filename = req.file.filename;
-
     }else{
         console.log('no imgae');
         filename = '';
@@ -95,18 +92,21 @@ exports.service = async (req, res, next) =>{
         desc: req.body.desc,
         img: filename,
         form: form,
+        status:true,
         serviceId: Date.now().toString()
       });
 
     res.render('result', {pageTitle:'Success',  path:'/'})
 }
 
+
 // Add Provider
 exports.addProvider = async (req, res, next) =>{
-    res.render('add-provider', {pageTitle:'Add Provider', path:'/add-provider'})
-}
-
-exports.providerProfile = async (req, res, next) =>{
+    let requestMethod = req.method;
+    console.log(requestMethod);
+    if(requestMethod=='GET'){
+        return res.render('add-provider', {pageTitle:'Add Provider', path:'/add-provider'})
+    }
     var image = req.file;
     var filename;
     if(image) {
@@ -121,7 +121,7 @@ exports.providerProfile = async (req, res, next) =>{
         filename = '';
     }
     
-    firestore.addDoc(firestore.collection(db, "providers"),{
+    firestore.addDoc(firestore.collection(db, "provider-info"),{
         name: req.body.name,
         desc: req.body.desc,
         address: req.body.address,
@@ -130,13 +130,53 @@ exports.providerProfile = async (req, res, next) =>{
       });
 
     return res.render('result', {pageTitle:'Success',  path:'/'})
+    
+}
+
+
+// Add Provider Service
+exports.addProviderService = async (req, res, next) =>{
+    let requestMethod = req.method;
+    console.log(requestMethod);
+    if(requestMethod=='GET'){
+        return res.render('add-provider-service', {pageTitle:'Add Provider Service', path:'/add-provider-service'})
+    }
+    var image = req.file;
+    var filename;
+    if(image) {
+        const uploadResult = await uploader.image(image, 'providers/');
+        if(!uploadResult){
+            return res.render('result', {pageTitle:'Fail',  path:'/'});
+        }
+        filename = req.file.filename;
+
+    }else{
+        console.log('no imgae');
+        filename = '';
+    }
+
+    console.log(req.body);
+    
+    firestore.addDoc(firestore.collection(db, "providers"),{
+        status:true,
+        title: req.body.title,
+        desc: req.body.desc,
+        address: req.body.address,
+        charges:req.body.charges,
+        img: filename,
+        serviceId:req.body.serviceid1,
+        providerId:req.body.providerid1,
+        providerServiceID: Date.now().toString()
+      });
+
+    return res.render('result', {pageTitle:'Success',  path:'/'})
+    
 }
 
 
 // PROFILE
 exports.profile = (req, res, next) =>{
     console.log('PROFILE PAGE')
-
     res.render('profile', {pageTitle:'Profile', path:'/profile'})    
 }
 
