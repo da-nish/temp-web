@@ -174,6 +174,21 @@ exports.addProviderService = async (req, res, next) =>{
 }
 
 
+// Chat page
+exports.chat = (req, res, next) =>{
+    console.log('Chat PAGE')
+    res.render('chat', {pageTitle:'Chat', path:'/chat'})    
+}
+
+// Load Chat
+
+exports.loadChat = async (req, res, next) =>{
+    const chats = await firebase_read.getProvidersInfo('chat');
+
+    const data = {data: chats};
+    return res.send(JSON.stringify(data)); 
+}
+    
 // PROFILE
 exports.profile = (req, res, next) =>{
     console.log('PROFILE PAGE')

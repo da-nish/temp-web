@@ -16,7 +16,12 @@ route.post('/add-provider', upload.single('image'), userContoller.addProvider)
 route.get('/add-provider-service', userContoller.addProviderService)
 route.post('/add-provider-service', upload.single('image'), userContoller.addProviderService)
 route.get('/show-providers', userContoller.showProviders)
-route.get('/profile', userContoller.profile) 
+route.get('/profile', userContoller.profile)
+
+route.get('/chat', userContoller.chat) 
+route.post('/load-chat', userContoller.loadChat) 
+
+
 
 // route.get('/reset/:token/:email', userContoller.getReset)//from link 
 
