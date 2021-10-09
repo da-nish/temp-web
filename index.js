@@ -12,8 +12,8 @@ app.set('views', 'views')
 const userRoute = require('./router/user_route')
 
 // for parsing application/xwww-
-// app.use(bodyParser.urlencoded({ extended: true })); 
-app.use(bodyParser.urlencoded({extended:false}));
+app.use(bodyParser.urlencoded({ extended: true })); 
+// app.use(bodyParser.urlencoded({extended:false}));
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static(path.join(__dirname, 'public')));
 //static file serve: css, js

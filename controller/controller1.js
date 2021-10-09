@@ -9,6 +9,7 @@ var fs = require('fs');
 
 const firestore = require('firebase/firestore/lite');
 const firebase_read = require('../firebase/read');
+const firebase_write = require('../firebase/write');
 
 
 //HOME
@@ -181,12 +182,33 @@ exports.chat = (req, res, next) =>{
 }
 
 // Load Chat
-
 exports.loadChat = async (req, res, next) =>{
-    const chats = await firebase_read.getProvidersInfo('chat');
-
+    const chats = await firebase_read.getChat('chat');
     const data = {data: chats};
     return res.send(JSON.stringify(data)); 
+}
+
+// Load Chat
+exports.sendChat = async (req, res, next) =>{
+    console.log('callled')
+    // console.log(req.body.toId)
+    // console.log(req.body);
+	// res.send(req.body);
+    // return res.send(JSON.stringify(data)); 
+
+
+    var map = { 
+        orderId:"null", 
+        receiverId:req.body.id, 
+        senderId:"admin", 
+        text:req.body.message, 
+        time: firestore.Timestamp.fromMillis(Date.now()),
+        type:"message"
+    };
+
+    const chats = await firebase_write.setChat('chat', map);
+
+    return res.send({response:'message sent', map}); 
 }
     
 // PROFILE

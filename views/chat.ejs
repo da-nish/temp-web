@@ -7,25 +7,112 @@
     <div class="ui segment">
         <h2 class="ui header"><%= pageTitle %></h2>
             <button onclick="loadData()">Load Chat</button><br>
-            <button onclick="chatlist()">click</button><br>
-            <span class="loading" ></span>
+            
+            <span class="loading" ></span><br><br>
+
+            
+
+            <div class="ui grid">
+              <div class="six wide column">
+                <div class="ui middle aligned divided list" id="userbox"></div>
+              </div>
+
+              <div class="ten wide column">
+              
+                <div id="chatbox" style="display: none;">
+                  <div id="chatuser"></div>
+                  <div style="height: 300px; overflow-y: scroll;" id="chatscroll"></div>
+                  <div class="ui fluid action input">
+                    <input type="text" id="message" placeholder="Reply ... ">
+                    <div class="ui button" onclick="sendMessage()">Send</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
     </div>
     
     <script>
-        function chatlist(){
-            let data = JSON.parse(localStorage.getItem('chatdata')).data;
-            const chat1={};
+        var chat;
+        var selectedUser;
+
+        function sendMessage(){
+          console.log(selectedUser);
+          var msg = document.getElementById('message').value;
+          document.getElementById('message').value='';
+          console.log(msg);
+          sendData(selectedUser, msg);        
+        }
+
+        function selectUser(id){
+          selectedUser = id;
+          document.getElementById('chatbox').style.display = "block";
+          document.getElementById('chatscroll').innerHTML = '';
+          var messages = sortMessagsBytime(chat[id]);
+          
+          //set selectd user above messages
+          var chatuser = setUser(id);
+          document.getElementById('chatuser').innerHTML = chatuser;
             
+          //set all messages
+          for(var i of messages){
+            var align = i.receiverId == 'admin' ? 'left' : 'right';
+            var m = `<div class="ui aligned message-bubble-${align}">
+                <p>${i.text}</p>
+              </div>`;
+            document.getElementById('chatscroll').insertAdjacentHTML('beforeend',m);
+          }
+        }
+
+        window.onload = function chatlist(){
+            let data = JSON.parse(localStorage.getItem('chatdata')).data;
+            const chatMessages={};
+            
+            //adding userid as key and empty array as value 
             for(var i of data){
-                chat1[i.senderId] = [];
+              if(i.senderId=='admin') continue;
+              chatMessages[i.senderId] = [];
+            }
+            //adding messages on perticular user
+            for(var i of data){
+              var uid = i.senderId=='admin'?i.receiverId:i.senderId;
+              chatMessages[uid].push(i);
             }
 
-            for(var i of data){
-                chat1[i.senderId].push(i);
+            //setting user on UI
+            for(var i in chatMessages){
+              var user = setUser(i);
+              document.getElementById('userbox').insertAdjacentHTML('beforeend',user);
             }
-            
-            console.log(chat1);
+            chat = chatMessages;
         }
+
+        function setUser(i){
+          return `<div class="item" onclick="selectUser('${i}')">
+                    <img class="ui avatar image" src="/images/user.png">
+                    <div class="content">
+                      <a class="header">${i}</a>
+                    </div>
+                </div>`;
+        }
+
+        function pushMessageLocal(obj, id, msg){
+          console.log(obj);
+          chat[id].push(obj);
+          selectUser(id);
+        }
+
+        function sortMessagsBytime(list){
+          console.log(list);
+
+          list.sort(function(x, y){
+            return x.time.seconds - y.time.seconds;
+          })
+          console.log(list);
+          return list;
+        }
+
         function loadData(){
             $(".loading").text('Loading ...');
             // return;
@@ -43,6 +130,24 @@
                 },
                 error: function() {
                     $(".loading").text('Error occured');
+                    console.log('ajax error');
+                }
+            });
+        }
+        function sendData(toId, message){
+            // return;
+            $.ajax({
+                type: "POST",
+                method: "post",
+                url: "/send-chat",
+                data: {id:toId, message: message},
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data.response);
+                    pushMessageLocal(data.map, data.map.receiverId, data.map.text);
+
+                },
+                error: function() {
                     console.log('ajax error');
                 }
             });

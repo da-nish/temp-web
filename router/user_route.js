@@ -20,6 +20,7 @@ route.get('/profile', userContoller.profile)
 
 route.get('/chat', userContoller.chat) 
 route.post('/load-chat', userContoller.loadChat) 
+route.post('/send-chat', userContoller.sendChat) 
 
 
 

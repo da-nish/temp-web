@@ -28,3 +28,20 @@ body{
     /* border: 2px solid #d4d4d4; */
     text-align: center;
 }
+
+.message-bubble-left{
+    padding: 5px 12px;
+    margin:4px;
+    background: #daf2fd;
+    width: max-content;
+    border-radius: 10px;
+}
+
+.message-bubble-right{
+    padding: 5px 12px;
+    margin: 4px;
+    margin-left: auto!important;
+    background: #6ce1ed;
+    width: max-content;
+    border-radius: 10px;
+}

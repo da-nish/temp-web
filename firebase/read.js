@@ -24,3 +24,11 @@ exports.getProviders = async (path) => {
   const list = getData.docs.map(doc => doc.data());
   return list;
 }
+
+
+exports.getChat = async (path) => {
+  const reference = firestore.collection(db, path);
+  const getData = await firestore.getDocs(reference);
+  const list = getData.docs.map(doc => doc.data());
+  return list;
+}
