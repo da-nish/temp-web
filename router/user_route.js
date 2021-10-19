@@ -18,6 +18,7 @@ route.post('/add-provider-service', upload.single('image'), userContoller.addPro
 route.get('/show-providers', userContoller.showProviders)
 route.get('/profile', userContoller.profile)
 
+route.get('/orders', userContoller.showOrders) 
 route.get('/chat', userContoller.chat) 
 route.post('/load-chat', userContoller.loadChat) 
 route.post('/send-chat', userContoller.sendChat) 

@@ -126,6 +126,7 @@
                     console.log(data);
                     localStorage.setItem('chatdata',JSON.stringify(data))
                     $(".loading").text('Done');
+                    location.reload();
 
                 },
                 error: function() {

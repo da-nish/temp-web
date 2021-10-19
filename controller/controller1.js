@@ -21,49 +21,25 @@ exports.loadData = async (req, res, next) =>{
     const providerInfo = await firebase_read.getProvidersInfo('provider-info');
     const providers = await firebase_read.getProviders('providers');
     const services = await firebase_read.getServices('services');
+    const orders = await firebase_read.getOrders('service_requests');
 
-    const data = {services: services, providerInfo:providerInfo, providers: providers};
+    const data = {services: services, providerInfo:providerInfo, providers: providers, orders: orders};
     return res.send(JSON.stringify(data)); 
 }
 
 //Get - Show All Services
 exports.showServices = async (req, res, next) => {
-
-    // const testFolder = '../images/';
-
-    // //get list of filename in /images and compare with firestore image data
-    // fs.readdirSync(testFolder).forEach(file => {
-    //     console.log(file);
-    // });
-
-    const data = await firebase_read.getServices('services');
-    res.render('show-services', {pageTitle:'All Services', data:data, path:'/show-services'})
+    res.render('show-services', {pageTitle:'All Services', path:'/show-services'})
 }
-
 
 //Get - Show All Providers
 exports.showProviders = async (req, res, next) => {
-
-    // const testFolder = '../images/';
-
-    // //get list of filename in /images and compare with firestore image data
-    // fs.readdirSync(testFolder).forEach(file => {
-    //     console.log(file);
-    // });
-    // const providerInfo = await firebase_read.getProvidersInfo('provider-info');
-    // const providers = await firebase_read.getProviders('providers');
-
-    // for(var j=0; j<providerInfo.length; j++){
-    //     const services = []
-    //     for(var i=0; i<providers.length; i++){
-    //         if(providers[i].providerId==providerInfo[j].providerId){
-    //             services.push(providers[i]);
-    //         }
-    //     }
-    //     providerInfo[j]['services'] = services;
-    // }
-    // console.log(providerInfo[0].services)
     res.render('show-providers', {pageTitle:'All Providers', path:'/show-providers'})
+}
+
+//Get - Show All Orders
+exports.showOrders = async (req, res, next) => {
+    res.render('orders', {pageTitle:'All Orders', path:'/orders'})
 }
 
 //Get - Add Service
@@ -167,6 +143,7 @@ exports.addProviderService = async (req, res, next) =>{
         img: filename,
         serviceId:req.body.serviceid1,
         providerId:req.body.providerid1,
+        count: '0',
         providerServiceID: Date.now().toString()
       });
 
@@ -198,6 +175,7 @@ exports.sendChat = async (req, res, next) =>{
 
 
     var map = { 
+        chatUser:req.body.id, 
         orderId:"null", 
         receiverId:req.body.id, 
         senderId:"admin", 

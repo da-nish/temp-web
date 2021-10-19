@@ -10,12 +10,11 @@
     <div id="row">
     </div>
 
-
     <script>
       let data = JSON.parse(localStorage.getItem('alldata'));
-      const services = data.services;
+      const orders = data.orders;
 
-      for( let i of services){
+      for( let i of orders){
         var row = `
         <div class='ui icon message'>
             <div class="content">
