@@ -22,9 +22,6 @@ route.get('/orders', userContoller.showOrders)
 route.get('/chat', userContoller.chat) 
 route.post('/load-chat', userContoller.loadChat) 
 route.post('/send-chat', userContoller.sendChat) 
-
-
-
-// route.get('/reset/:token/:email', userContoller.getReset)//from link 
+route.post('/update-order-status', userContoller.updateOrderStatus) 
 
 module.exports = route

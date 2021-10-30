@@ -34,7 +34,7 @@
        
       </form>
       <br>
-      <div class="ui button" onclick="send()">Sign Up</div>
+      <div class="ui button" onclick="send()">Submit</div>
     </div>
 
     <script>
@@ -55,11 +55,11 @@
                         <td>
                                 <!-- <input type="hidden" name="gender"> -->
                                 <select name="row${count}_field" id="row${count}_field" >
-                                    <option value="Text">Text</option>
-                                    <option value="TextArea">TextArea</option>
-                                    <option value="Number">Number</option>
-                                    <option value="CheckBox">CheckBox</option>
-                                    <option value="DatePicker">DatePicker</option>
+                                    <option value="textfield">Text</option>
+                                    <option value="textareafield">TextArea</option>
+                                    <option value="numberfield">Number</option>
+                                    <option value="checkbox">CheckBox</option>
+                                    <option value="datefield">DatePicker</option>
                                 </select>
                         </td>
                         <td>
@@ -71,27 +71,7 @@
             formfield.push('row'+count);
             document.getElementById('formbody').insertAdjacentHTML('beforeend', newRow);
         }
-        function test(){
-            var formData = new FormData($('#form')[0]);
-
-            formData.append("user", "Dummy");
-            formData.append("pass", 123456);
-            formData.append("image", $('input[type=file]')[0].files[0]);
-
-            $.ajax({
-                type: "POST",
-                url: "/add-service",
-                data: formData,
-                contentType: false,
-                processData: false,
-                success: function(msg) {
-                    console.log('ajax success');
-                },
-                error: function() {
-                    console.log('ajax error');
-                }
-            });
-        }
+        
         
         function removeField(id){
             for( var i = 0; i < formfield.length; i++){ 
@@ -104,12 +84,19 @@
             for(let i=0; i<formfield.length; i++){
                 obj.push({
                     id: formfield[i],
-                    required: document.querySelector('#'+formfield[i]+'_required').checked,
+                    isrequired: document.querySelector('#'+formfield[i]+'_required').checked,
                     title: document.getElementById(formfield[i]+'_title').value,
-                    error: document.getElementById(formfield[i]+'_error').value,
-                    field: document.getElementById(formfield[i]+'_field').value,
+                    errormsg: document.getElementById(formfield[i]+'_error').value,
+                    type: document.getElementById(formfield[i]+'_field').value,
                 })
             }
+            obj.push({
+                    id: 'row'+formfield.length,
+                    isrequired: true,
+                    title: 'Service Date',
+                    errormsg: 'Please select service date',
+                    type: 'datefield',
+            })
             
             $('#obj').val(JSON.stringify(obj));
             $('form').submit();

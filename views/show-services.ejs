@@ -7,24 +7,43 @@
 <div class="ui segment">
     <h2 class="ui header"><%= pageTitle %></h2>
     <hr>
-    <div id="row">
+    <div class="ui cards" id="row">
     </div>
 
-
     <script>
-      let data = JSON.parse(localStorage.getItem('alldata'));
-      const services = data.services;
+      window.onload = function onLoadPage(){
+        let data = JSON.parse(localStorage.getItem('alldata'));
+        const services = data.services;
 
-      for( let i of services){
-        var row = `
-        <div class='ui icon message'>
-            <div class="content">
-              <div class="header">
-                ${i.title}
+        for(let i of services){
+          
+          var fields = formField(i.form);
+          var row = `
+            <div class="card">
+              <div class="content">
+                <div class="header">${i.title} <div class="ui label">status: ${i.status}</div></div>
+                <div class="description">
+                  description: ${i.desc}<br>
+                  serviceId: ${i.serviceId}<br>
+                  <h5>Form field</h5> ${fields}
+                </div>
               </div>
             </div>
-        </div>`;
-        document.getElementById('row').insertAdjacentHTML('beforeend', row);
+          `;
+          document.getElementById('row').insertAdjacentHTML('beforeend', row);
+        }
+      }
+
+      function formField(form){
+        var allFields = '';
+        for(let field of form){
+          for (let key in field) {
+            console.log(key, field[key]);
+            allFields+=  '<br><strong>'+ key+'</strong>: '+field[key];
+          }
+          allFields+='<br> =========== '
+        }
+        return allFields;
       }
     </script>
     

@@ -188,6 +188,17 @@ exports.sendChat = async (req, res, next) =>{
 
     return res.send({response:'message sent', map}); 
 }
+// update order status
+exports.updateOrderStatus = async (req, res, next) =>{
+    console.log('callled')
+    //update db with req.body.id req.body.status
+
+   
+
+    // const chats = await firebase_write.setChat('chat', map);
+
+    // return res.send({response:'message sent', map}); 
+}
     
 // PROFILE
 exports.profile = (req, res, next) =>{
