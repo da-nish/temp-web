@@ -7,24 +7,72 @@
 <div class="ui segment">
     <h2 class="ui header"><%= pageTitle %></h2>
     <hr>
-    <div id="row">
+    <div class="ui cards" id="row">
     </div>
 
     <script>
-      let data = JSON.parse(localStorage.getItem('alldata'));
-      const orders = data.orders;
+      window.onload = function onLoadPage(){
+        let data = JSON.parse(localStorage.getItem('alldata'));
+        const orders = data.orders;
 
-      for( let i of orders){
-        var row = `
-        <div class='ui icon message'>
-            <div class="content">
-              <div class="header">
-                ${i.title}
+        for( let i of orders){
+          var orderData = orderInfo(i.formData);
+          var row = `
+            <div class="card">
+              <div class="content">
+                <div class="header">Order Info <div class="ui label">status: ${i.status}</div></div>
+                <div class="description">
+                  orderId: ${i.orderId}<br>
+                  serviceId: ${i.serviceId}<br>
+                  providerId: ${i.providerId}<br>
+                  userId: ${i.userId}<br>
+                  orderInfo--- ${orderData}
+                </div>
+                
+                <select name="${i.orderId}" id="${i.orderId}">
+                    <option value="cancel">cancel</option>
+                    <option value="pending">pending</option>
+                    <option value="confirm">confirm</option>
+                    <option value="complete">complete</option>
+                </select>
+                <button onclick="updateOrder('${i.orderId}')">Update Status</button><br>
+                <span class="loading" id="${i.orderId}_message"></span>
               </div>
             </div>
-        </div>`;
-        document.getElementById('row').insertAdjacentHTML('beforeend', row);
+          `;
+          document.getElementById('row').insertAdjacentHTML('beforeend', row);
+        }
       }
+
+      function orderInfo(order){
+        var info = '';
+        for (let key in order) {
+          info +=  '<br><strong>'+ key+'</strong>: '+order[key];
+        }
+          
+        return info;
+      }
+      function updateOrder(id){
+        $("#"+id+"_message").text('Loading ...');
+            var message = document.getElementById(id).value;
+            console.log(message);
+            return;
+            $.ajax({
+                type: "POST",
+                method: "post",
+                url: "/update-order-status",
+                data: {orderid:id, status: message},
+                dataType: 'json',
+                success: function(data) {
+                    // console.log(data.response);
+                    console.log('updated');
+                    $("#"+id+"_message").text('Error occured');
+                },
+                error: function() {
+                  $("#"+id+"_message").text('Error occured');
+                }
+            });
+        }
     </script>
     
 </div>
